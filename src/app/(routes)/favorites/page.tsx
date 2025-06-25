@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import {jobType} from '@/types/types';
 import Link from 'next/link';
+import { removeFavorites } from '@/components/commonFunctions';
+import { Heart } from 'lucide-react';
 
 
 const Page = () => {
   const [favoriteJobs, setFavoriteJobs] = useState<jobType[]>([]);
+  const [refetch, setReFetch] = useState(true);
 
   useEffect(() => {
     const jobList: [jobType] = JSON.parse(localStorage.getItem('JobList') || '[]');
-    const favoriteIds : [string] = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-    const filtered = jobList.filter((job) => favoriteIds.includes(job.id));
+    const filtered = jobList.filter((job) => job.isFavorite === true);
     setFavoriteJobs(filtered);
-  }, []);
+  }, [refetch]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 mt-5">
@@ -28,13 +30,19 @@ const Page = () => {
             key={index}
             className="border border-slate-400 py-2 px-3 rounded shadow hover:bg-gray-50 transition"
           >
-            <div className='flex justify-between sm:items-center gap-3'>
+            <div className='flex justify-between items-center gap-3'>
               <div className='flex gap-3 items-center max-sm:flex-wrap'>
                 <h2 className="text-lg font-semibold">{job.job_title}</h2>
-                <p className="text-gray-700 block sm:inline-block">{job.company_name} — {job.job_location}</p>
+                <p className="text-gray-700">{job.company_name} — {job.job_location}</p>
               </div>
               <div className='min-w-fit'>
-              <Link href={`/jobs/${job.id}`} className="text-blue-600 hover:underline text-sm mt-4 inline-block">View Details</Link>
+
+                 <div onClick={() => {
+                  removeFavorites(job.id)
+                  setReFetch(!refetch);
+                 }} className='cursor-pointer'><Heart fill='#000' /></div>
+
+
               </div>
             </div>
 
@@ -42,6 +50,7 @@ const Page = () => {
               <p className="text-sm text-gray-600 mt-1 line-clamp-3">{job.jobDescription}</p>
             )}
 
+            <Link href={`/jobs/${job.id}`} className="text-blue-600 hover:underline text-sm mt-4 inline-block">View Details</Link>
           </div>
           ))}
         </div>

@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { jobType } from '@/types/types';
-import { addToFavorites } from '@/components/commonFunctions';
+import { addToFavorites, removeFavorites } from '@/components/commonFunctions';
+import { Heart } from 'lucide-react';
 
 
 
@@ -11,6 +12,7 @@ const Page = () => {
   const [filterJobs, setfilterJobs] = useState<jobType[]>([]);
   const [searchTitle, setSearchTitle] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
+  const [refetch, setReFetch] = useState(true);
 
   useEffect(() => {
     const getJobs = localStorage.getItem('JobList');
@@ -19,7 +21,7 @@ const Page = () => {
       setFetchJobs(joblisting);
       setfilterJobs(joblisting);
     }
-  }, []);
+  }, [refetch]);
 
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const Page = () => {
   }, [searchTitle, searchLocation, fetchJobs]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 mt-10">
+    <div className="max-w-5xl mx-auto px-4 py-6 mt-5">
       <h1 className="text-2xl font-bold mb-4">Job Listings</h1>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
@@ -78,7 +80,18 @@ const Page = () => {
                   <p className="text-gray-700">{job.company_name} — {job.job_location}</p>
                 </div>
                 <div className='min-w-fit'>
-                   <button onClick={() => addToFavorites(job.id)}>Add favorite</button>
+                  {job.isFavorite ? (
+                   <div onClick={() => {
+                    removeFavorites(job.id)
+                    setReFetch(!refetch);
+                   }} className='cursor-pointer'><Heart fill='#000' /></div>
+
+                  ) : (
+                   <div onClick={() => {
+                    addToFavorites(job.id)
+                    setReFetch(!refetch);
+                  }} className='cursor-pointer'><Heart /></div>
+                  )}
                 </div>
               </div>
 

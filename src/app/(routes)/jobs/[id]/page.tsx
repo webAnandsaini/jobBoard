@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { jobType } from '@/types/types';
 import Link from 'next/link';
-import { addToFavorites } from '@/components/commonFunctions';
+import { addToFavorites, removeFavorites } from '@/components/commonFunctions';
+import { Heart } from 'lucide-react';
 
 
 
 const Page = () => {
+  const [refetch, setReFetch] = useState(true);
   const { id } = useParams();
   const [job, setJob] = useState<jobType | null>(null);
 
@@ -18,7 +20,7 @@ const Page = () => {
       const foundJob = jobList.find((j) => j.id === id);
       setJob(foundJob || null);
     }
-  }, [id]);
+  }, [id, refetch]);
 
   if (!job) {
     return <div className="max-w-2xl mx-auto p-6 text-red-600">Job not found.</div>;
@@ -40,8 +42,18 @@ const Page = () => {
         )}
       </div>
       <div className='min-w-fit'>
-          <button onClick={() => addToFavorites(job.id)}>Add favorite</button>
+      {job.isFavorite ? (
+                   <div onClick={() => {
+                    removeFavorites(job.id)
+                    setReFetch(!refetch);
+                   }} className='cursor-pointer'><Heart fill='#000' /></div>
 
+                  ) : (
+                   <div onClick={() => {
+                    addToFavorites(job.id)
+                    setReFetch(!refetch);
+                  }} className='cursor-pointer'><Heart /></div>
+                  )}
       </div>
       </div>
 

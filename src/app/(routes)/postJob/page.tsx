@@ -38,7 +38,7 @@ function Page() {
   const AddJobForm = async (data: jobFormType) => {
     try {
       const jobId = generateShortId();
-      const jobFormData = { id: jobId, ...data };
+      const jobFormData = { id: jobId, isFavorite: false , ...data };
 
       const Stored_jobList = localStorage.getItem('JobList');
       const jobList = Stored_jobList ? JSON.parse(Stored_jobList) : [];

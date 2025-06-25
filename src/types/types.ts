@@ -5,4 +5,5 @@ export type jobType = {
     company_name: string;
     job_location: string;
     company_email: string;
+    isFavorite: boolean;
 }

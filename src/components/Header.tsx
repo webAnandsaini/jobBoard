@@ -1,21 +1,25 @@
+'use client';
+import { BookHeart, DiamondPlus, TextSearch } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import { usePathname } from 'next/navigation'
 
 function Header() {
+    const pathname = usePathname();
     const menusItems = [
         {
             label: 'Jobs',
-            Icon: '',
+            Icon: <TextSearch className='size-4 sm:size-5' />,
             path: '/'
         },
         {
             label: 'post Job',
-            Icon: '',
+            Icon: <DiamondPlus className='size-4 sm:size-5' />,
             path: '/postJob'
         },
         {
             label: 'favorites',
-            Icon: '',
+            Icon: <BookHeart className='size-4 sm:size-5' />,
             path: '/favorites'
         }
     ]
@@ -29,7 +33,7 @@ function Header() {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 508 508"
                         fill="#000000"
-                        className='size-12 sm:size-16'
+                        className='size-10 sm:size-16'
                     >
                         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                         <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
@@ -140,7 +144,8 @@ function Header() {
                 {
                   menusItems.map((menusItem, index) => (
                     <li key={index}>
-                        <Link href={menusItem.path} className='px-2 py-2 text-lg text-black'>{menusItem.label}</Link>
+                        <Link href={menusItem.path} className={`px-2 py-2 text-base flex items-center gap-1 ${pathname === menusItem.path ? 'text-blue-500' : 'text-black'}`}>{menusItem.Icon}  <span>{menusItem.label}</span></Link>
+
                     </li>
                   ))
                 }
